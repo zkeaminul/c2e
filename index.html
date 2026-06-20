@@ -3,269 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CyberMining - Tap to Earn</title>
+    <title>PixelRanch Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: radial-gradient(circle at center, #1a0b2e 0%, #090514 100%);
-            color: #ffffff;
-            overflow: hidden;
-            height: 100vh;
+            font-family: 'Courier New', Courier, monospace;
+            background: #0b071e;
+            color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 20px;
+            height: 100vh;
+            padding: 15px;
+            overflow: hidden;
         }
 
-        /* Header UI */
-        .header {
+        /* Top Bar */
+        .top-bar {
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 5px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 2px solid #3d1b7c;
         }
-
-        .user-tag {
-            background: rgba(255, 255, 255, 0.07);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #00ffcc;
-        }
-
-        /* Score Display */
-        .score-container {
+        .balance-box {
             text-align: center;
-            margin-top: 20px;
+            margin: 20px 0;
+        }
+        .balance-title { font-size: 12px; color: #a19bb0; text-transform: uppercase; }
+        .balance-amount { font-size: 38px; font-weight: bold; color: #00ff66; text-shadow: 0 0 10px rgba(0,255,102,0.5); }
+
+        /* Pixel Ranch Grid Container */
+        .ranch-container {
+            width: 100%;
+            max-width: 340px;
+            aspect-ratio: 1;
+            background: #150f30;
+            border: 4px solid #5828b6;
+            box-shadow: 0 0 20px rgba(88, 40, 182, 0.6);
+            border-radius: 16px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 12px;
+            padding: 12px;
+            position: relative;
         }
 
-        .score-title {
-            font-size: 14px;
-            color: #8b80a5;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .score {
-            font-size: 48px;
-            font-weight: 800;
-            color: #ffffff;
-            text-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
-            margin-top: 5px;
+        /* Grid Slot / Pet Box */
+        .slot {
+            background: #211747;
+            border: 2px dashed #423081;
+            border-radius: 12px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+        }
+        .slot:active { transform: scale(0.96); }
+        .slot.active {
+            background: linear-gradient(145deg, #2b1c5c, #190f3a);
+            border: 2px solid #00ffff;
+        }
+
+        .pet-avatar { font-size: 50px; filter: drop-shadow(0 0 8px rgba(0,255,255,0.5)); }
+        .pet-level {
+            position: absolute;
+            bottom: 8px;
+            background: #00ffff;
+            color: #000;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        /* Stats & Action Footer */
+        .footer-actions {
+            width: 100%;
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
             gap: 10px;
         }
-
-        /* Main Clicker Coin */
-        .coin-container {
-            position: relative;
-            width: 240px;
-            height: 240px;
-            margin: auto 0;
-        }
-
-        .coin {
+        .btn {
             width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #00ffcc 0%, #0077ff 100%);
-            border-radius: 50%;
-            box-shadow: 0 0 40px rgba(0, 255, 204, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.1s ease;
-            position: relative;
-            border: 6px solid #110724;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 4px 0 #000;
         }
+        .btn-buy { background: #ff007c; box-shadow: 0 4px 0 #b30054; }
+        .btn-buy:active { transform: translateY(4px); box-shadow: none; }
 
-        .coin::after {
-            content: '⚡';
-            font-size: 80px;
-            text-shadow: 0 0 20px rgba(255,255,255,0.8);
-        }
-
-        .coin:active {
-            transform: scale(0.95);
-        }
-
-        /* Floating +1 Text Animation */
-        .floating-text {
-            position: absolute;
-            font-size: 28px;
-            font-weight: 800;
-            color: #00ffcc;
-            pointer-events: none;
-            animation: floatUp 0.8s ease-out forwards;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
-        }
-
-        @keyframes floatUp {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-120px) scale(1.2); }
-        }
-
-        /* Footer Energy Bar */
-        .footer-status {
+        .energy-bar {
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            margin-bottom: 10px;
-        }
-
-        .energy-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            margin-bottom: 8px;
-            color: #d1cadd;
-        }
-
-        .energy-bar-bg {
-            width: 100%;
-            height: 12px;
-            background: #150e26;
-            border-radius: 10px;
+            height: 8px;
+            background: #1d153a;
+            border-radius: 4px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-
-        .energy-bar-fill {
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(90deg, #ff007f, #00ffcc);
-            border-radius: 10px;
-            transition: width 0.1s linear;
+        .energy-fill { width: 100%; height: 100%; background: #ffcc00; transition: width 0.2s; }
+        
+        /* Floating Profit Animation */
+        .floating-profit {
+            position: absolute;
+            color: #00ff66;
+            font-weight: bold;
+            font-size: 20px;
+            animation: moveUp 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes moveUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-40px); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <div class="header">
-        <div class="user-tag" id="username">Cyber Miner</div>
-        <div class="user-tag" style="color: #ff007f;">⚡ Level 1</div>
+    <!-- Top Info -->
+    <div class="top-bar">
+        <span id="username" style="color: #00ffff; font-weight: bold;">Pixel_Rancher</span>
+        <span style="color: #ff007c;">⭐ VIP 1</span>
     </div>
 
-    <!-- Score -->
-    <div class="score-container">
-        <div class="score-title">Total Balance</div>
-        <div class="score" id="balance">0</div>
+    <!-- Balance Screen -->
+    <div class="balance-box">
+        <div class="balance-title">PIXEL COINS</div>
+        <div class="balance-amount" id="balance">0</div>
     </div>
 
-    <!-- Clickable Coin -->
-    <div class="coin-container">
-        <div class="coin" id="coinBtn"></div>
-    </div>
-
-    <!-- Energy Status -->
-    <div class="footer-status">
-        <div class="energy-header">
-            <span>⚡ Energy</span>
-            <span id="energy-text">1000 / 1000</span>
+    <!-- Pixel Ranch Grid (Slots for Pets) -->
+    <div class="ranch-container" id="ranchGrid">
+        <div class="slot active" onclick="tapSlot(this, 0)">
+            <div class="pet-avatar">🐱</div>
+            <div class="pet-level">Lv.1</div>
         </div>
-        <div class="energy-bar-bg">
-            <div class="energy-bar-fill" id="energy-fill"></div>
+        <div class="slot" id="slot-1" onclick="buyNewSlot(1)">
+            <div class="pet-avatar" style="opacity: 0.3;">🔒</div>
+            <div class="pet-level" style="background:#555;">500 COIN</div>
         </div>
+        <div class="slot" id="slot-2" onclick="buyNewSlot(2)">
+            <div class="pet-avatar" style="opacity: 0.3;">🔒</div>
+            <div class="pet-level" style="background:#555;">2.5K COIN</div>
+        </div>
+        <div class="slot" id="slot-3" onclick="buyNewSlot(3)">
+            <div class="pet-avatar" style="opacity: 0.3;">🔒</div>
+            <div class="pet-level" style="background:#555;">10K COIN</div>
+        </div>
+    </div>
+
+    <!-- Footer Settings & Control -->
+    <div class="footer-actions">
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:#a19bb0;">
+            <span>⚡ Ranch Energy</span>
+            <span id="energy-txt">500/500</span>
+        </div>
+        <div class="energy-bar"><div class="energy-fill" id="energy-fill"></div></div>
+        
+        <button class="btn btn-buy" onclick="upgradeActivePet()">🚀 UPGRADE PET (Cost: <span id="upgrade-cost">100</span>)</button>
     </div>
 
     <script>
-        // Telegram WebApp Initialization
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Full screen open
+        tg.expand();
 
-        // Load username from Telegram
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            document.getElementById('username').innerText = `🛸 ${tg.initDataUnsafe.user.first_name}`;
+            document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name;
         }
 
-        // App States
-        let balance = parseInt(localStorage.getItem('mine_balance')) || 0;
-        let energy = parseInt(localStorage.getItem('mine_energy')) || 1000;
-        const maxEnergy = 1000;
-        const tapReward = 1;
+        // Game Logic States
+        let coins = parseInt(localStorage.getItem('pr_coins')) || 0;
+        let petLevel = parseInt(localStorage.getItem('pr_pet_lvl')) || 1;
+        let energy = parseInt(localStorage.getItem('pr_energy')) || 500;
+        let maxEnergy = 500;
+        let unlockedSlots = JSON.parse(localStorage.getItem('pr_slots')) || [true, false, false, false];
 
-        // Elements
-        const balanceEl = document.getElementById('balance');
-        const energyTextEl = document.getElementById('energy-text');
-        const energyFillEl = document.getElementById('energy-fill');
-        const coinBtn = document.getElementById('coinBtn');
+        const slotCosts = [0, 500, 2500, 10000];
+        const petAvatars = ["🐱", "🦊", "🤖", "🐉", "🦅"];
 
-        // Update UI initially
-        function updateUI() {
-            balanceEl.innerText = balance.toLocaleString();
-            energyTextEl.innerText = `${energy} / ${maxEnergy}`;
-            const percentage = (energy / maxEnergy) * 100;
-            energyFillEl.style.width = `${percentage}%`;
-        }
-        updateUI();
-
-        // Tap Event
-        coinBtn.addEventListener('click', (e) => {
-            if (energy >= tapReward) {
-                // Deduct energy & add balance
-                balance += tapReward;
-                energy -= tapReward;
-                
-                // Save to Local Storage
-                localStorage.setItem('mine_balance', balance);
-                localStorage.setItem('mine_energy', energy);
-
-                updateUI();
-                createFloatingText(e);
-                
-                // Telegram haptic feedback (vibration)
-                if (tg.HapticFeedback) {
-                    tg.HapticFeedback.impactOccurred('medium');
+        function updateDisplay() {
+            document.getElementById('balance').innerText = coins.toLocaleString();
+            document.getElementById('energy-txt').innerText = `${energy}/${maxEnergy}`;
+            document.getElementById('energy-fill').style.width = `${(energy/maxEnergy)*100}%`;
+            document.getElementById('upgrade-cost').innerText = (petLevel * 100);
+            
+            // Update slots UI
+            unlockedSlots.forEach((unlocked, index) => {
+                if(index === 0) return;
+                const slot = document.getElementById(`slot-${index}`);
+                if(unlocked) {
+                    slot.classList.add('active');
+                    slot.setAttribute('onclick', `tapSlot(this, ${index})`);
+                    slot.innerHTML = `<div class="pet-avatar">${petAvatars[index % petAvatars.length]}</div><div class="pet-level">Lv.${petLevel}</div>`;
                 }
-            }
-        });
-
-        // Floating "+1" Animation
-        function createFloatingText(e) {
-            const rect = coinBtn.getBoundingClientRect();
-            // Supports both click and multi-touch coordinates
-            const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-            const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
-
-            const text = document.createElement('div');
-            text.classList.add('floating-text');
-            text.innerText = `+${tapReward}`;
-            text.style.left = `${x}px`;
-            text.style.top = `${y}px`;
-
-            coinBtn.appendChild(text);
-
-            setTimeout(() => {
-                text.remove();
-            }, 800);
+            });
         }
 
-        // Energy Recovery System (Every 1 second +1 energy)
-        setInterval(() => {
-            if (energy < maxEnergy) {
-                energy += 1;
-                localStorage.setItem('mine_energy', energy);
-                updateUI();
+        // Tap Mechanics
+        function tapSlot(element, index) {
+            if (energy > 0) {
+                let profit = petLevel * 2;
+                coins += profit;
+                energy -= 2;
+                
+                localStorage.setItem('pr_coins', coins);
+                localStorage.setItem('pr_energy', energy);
+                updateDisplay();
+                
+                // Haptic Feedback
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+                // Floating point effect
+                const rect = element.getBoundingClientRect();
+                const text = document.createElement('div');
+                text.className = 'floating-profit';
+                text.innerText = `+${profit}`;
+                text.style.left = `${rect.width/2 - 10}px`;
+                text.style.top = `${rect.height/2 - 20}px`;
+                element.appendChild(text);
+                setTimeout(() => text.remove(), 600);
             }
-        }, 1000);
+        }
+
+        // Buy/Unlock new Ranch spots
+        function buyNewSlot(index) {
+            let cost = slotCosts[index];
+            if(coins >= cost && !unlockedSlots[index]) {
+                coins -= cost;
+                unlockedSlots[index] = true;
+                localStorage.setItem('pr_coins', coins);
+                localStorage.setItem('pr_slots', JSON.stringify(unlockedSlots));
+                updateDisplay();
+            } else {
+                tg.showAlert("Not enough Pixel Coins or already unlocked!");
+            }
+        }
+
+        // Upgrade character level
+        function upgradeActivePet() {
+            let cost = petLevel * 100;
+            if(coins >= cost) {
+                coins -= cost;
+                petLevel++;
+                localStorage.setItem('pr_coins', coins);
+                localStorage.setItem('pr_pet_lvl', petLevel);
+                
+                // Dynamic level update
+                document.querySelectorAll('.slot.active .pet-level').forEach(el => {
+                    el.innerText = `Lv.${petLevel}`;
+                });
+                updateDisplay();
+                tg.showAlert("Pet Upgraded Successfully! 🎉");
+            } else {
+                tg.showAlert("Insufficient Coins!");
+            }
+        }
+
+        // Auto energy recovery
+        setInterval(() => {
+            if(energy < maxEnergy) {
+                energy += 5;
+                if(energy > maxEnergy) energy = maxEnergy;
+                localStorage.setItem('pr_energy', energy);
+                updateDisplay();
+            }
+        }, 2000);
+
+        updateDisplay();
     </script>
 </body>
 </html>
