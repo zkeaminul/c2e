@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Miner</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background: linear-gradient(180deg, #1a0033 0%, #0d001a 100%);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .header {
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #b366ff;
+        }
+        .balance-container {
+            font-size: 36px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-shadow: 0 0 15px #9933ff;
+        }
+        .balance-container span {
+            color: #ffd700;
+        }
+        .miner-btn {
+            background: radial-gradient(circle, #4d0099 0%, #26004d 100%);
+            border: 4px solid #9933ff;
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 30px #6600cc;
+            transition: transform 0.1s ease;
+        }
+        .miner-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 40px #b366ff;
+        }
+        .miner-btn img {
+            width: 120px;
+            height: 120px;
+        }
+        .footer-nav {
+            background-color: #130026;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 2px solid #330066;
+        }
+        .nav-item {
+            color: #a6a6a6;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            color: #b366ff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">Phone Miner Chad Bot</div>
+
+    <div>
+        <div class="balance-container">
+            ?? <span id="coin-count">0</span>
+        </div>
+        <p style="color: #aaa; font-size: 14px;">Tap the character to mine</p>
+    </div>
+
+    <div class="miner-btn" onclick="tapCoin()">
+        <span style="font-size: 80px;">??</span>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <button style="background: #9933ff; border: none; padding: 10px 20px; color: white; border-radius: 20px; font-weight: bold;">?? Upgrade Turbo</button>
+    </div>
+
+    <div class="footer-nav">
+        <div class="nav-item active">?? Mine</div>
+        <div class="nav-item">?? Tasks</div>
+        <div class="nav-item">?? Upgrade</div>
+        <div class="nav-item">?? Wallet</div>
+    </div>
+
+    <script>
+        // ????????? ???? ????? ??????????? ???
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // ??????? ???? ???????? ?? ???? ????
+
+        let coins = 0;
+
+        function tapCoin() {
+            coins += 1;
+            document.getElementById('coin-count').innerText = coins.toLocaleString();
+            
+            // ????? ????????? ?????? (???????????? ????)
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+        }
+    </script>
+</body>
+</html>
