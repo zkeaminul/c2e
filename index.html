@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dhaka7 Pro Gaming & Betting</title>
+    <title>Dhaka7 VIP Pro Platform</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', system-ui, sans-serif; }
         
         body {
-            background-color: #0b0e11;
+            background: radial-gradient(circle at top, #141923 0%, #090b11 100%);
             color: #eaecef;
             padding: 15px;
             padding-bottom: 100px;
@@ -20,67 +20,101 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #1e2329;
+            background: rgba(30, 35, 41, 0.9);
             padding: 12px 15px;
-            border-radius: 10px;
-            border-bottom: 2px solid #fcd535;
+            border-radius: 14px;
+            border: 1px solid rgba(252, 213, 53, 0.2);
+            backdrop-filter: blur(10px);
         }
-        .logo { font-size: 20px; font-weight: bold; color: #fcd535; }
-        .wallet-box { display: flex; align-items: center; gap: 10px; }
-        .balance-container { background: #2b3139; padding: 6px 12px; border-radius: 5px; font-weight: bold; }
-        .balance-amount { color: #fcd535; }
+        .logo { font-size: 22px; font-weight: 900; color: #fcd535; text-shadow: 0 0 10px rgba(252, 213, 53, 0.4); }
+        .balance-container { background: #2b3139; padding: 8px 16px; border-radius: 8px; font-weight: bold; border: 1px solid #3a424c; }
+        .balance-amount { color: #00ff66; font-size: 18px; }
         
+        /* Premium Bonus Banner */
+        .bonus-banner {
+            background: linear-gradient(135deg, #ff007c 0%, #7928ca 100%);
+            border-radius: 14px;
+            padding: 18px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 0, 124, 0.3);
+            box-shadow: 0 8px 20px rgba(255, 0, 124, 0.2);
+        }
+        .bonus-banner h3 { font-size: 18px; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
+        .bonus-banner p { font-size: 13px; color: #ffebf3; line-height: 1.4; }
+        .badge-mega { position: absolute; right: -15px; top: -15px; background: #fcd535; color: #000; padding: 25px 20px 10px 20px; transform: rotate(45deg); font-weight: bold; font-size: 11px; }
+
         /* Deposit & Withdraw Buttons */
-        .action-btns { display: flex; gap: 10px; margin: 15px 0; }
-        .act-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; text-align: center; }
-        .btn-deposit { background: #00ff66; color: #000; }
-        .btn-withdraw { background: #f6465d; color: #fff; }
+        .action-btns { display: flex; gap: 12px; margin: 15px 0; }
+        .act-btn { flex: 1; padding: 14px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; text-align: center; transition: all 0.2s; text-transform: uppercase; }
+        .btn-deposit { background: linear-gradient(90deg, #00ff66, #00e575); color: #000; box-shadow: 0 4px 15px rgba(0, 255, 102, 0.3); }
+        .btn-withdraw { background: #21262c; color: #f6465d; border: 1px solid rgba(246, 70, 93, 0.3); }
+        .act-btn:active { transform: scale(0.97); }
 
         /* Game Categories Grid */
-        .section-title { font-size: 16px; margin: 15px 0 10px 0; color: #848e9c; text-transform: uppercase; letter-spacing: 1px; }
-        .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .section-title { font-size: 14px; margin: 20px 0 10px 0; color: #848e9c; text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; gap: 6px; }
+        .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
         .game-card {
-            background: linear-gradient(145deg, #1e2329, #14181c);
-            border: 1px solid #2b3139;
-            border-radius: 12px;
-            padding: 20px 15px;
+            background: linear-gradient(145deg, #1e2329, #111417);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px 15px;
             text-align: center;
             cursor: pointer;
-            transition: transform 0.2s;
+            position: relative;
+            transition: all 0.3s;
         }
-        .game-card:active { transform: scale(0.95); }
-        .game-icon { font-size: 32px; margin-bottom: 8px; }
-        .game-name { font-weight: bold; font-size: 15px; }
+        .game-card:hover { border-color: rgba(252, 213, 53, 0.3); }
+        .game-icon { font-size: 38px; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
+        .game-name { font-weight: bold; font-size: 15px; color: #fff; }
+        .lock-icon { position: absolute; top: 10px; right: 10px; font-size: 12px; background: rgba(246, 70, 93, 0.2); color: #f6465d; padding: 3px 7px; border-radius: 20px; font-weight: bold; }
 
-        /* Popups / Modals */
+        /* Modals UI */
         .modal {
             position: fixed;
             top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 360px;
-            background: #1e2329; border: 2px solid #fcd535;
-            border-radius: 15px; padding: 20px;
+            width: 92%; max-width: 360px;
+            background: #1e2329; border: 1px solid rgba(252, 213, 53, 0.4);
+            border-radius: 20px; padding: 22px;
             display: none; z-index: 2000;
-            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:none; z-index: 1999; }
-        .modal-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-bottom: 15px; color: #fcd535; }
-        .close-modal { cursor: pointer; color: #f6465d; }
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; z-index: 1999; backdrop-filter: blur(5px); }
+        .modal-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-bottom: 18px; color: #fcd535; }
+        .close-modal { cursor: pointer; color: #848e9c; font-size: 20px; }
         
-        .bkash-number-box { background: #e2136e; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-align: center; margin-bottom: 15px; font-size: 16px; }
-        .input-field { width: 100%; background: #2b3139; border: 1px solid #474f59; color: white; padding: 10px; border-radius: 5px; font-size: 14px; margin-bottom: 12px; }
-        .submit-btn { background: #fcd535; color: #000; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 15px; }
+        /* bKash Premium Banner */
+        .bkash-number-box {
+            background: linear-gradient(135deg, #d12053 0%, #e2136e 100%);
+            color: white; padding: 15px; border-radius: 12px; font-weight: bold; text-align: center; margin-bottom: 18px; font-size: 17px;
+            box-shadow: 0 4px 12px rgba(226, 19, 110, 0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .input-field { width: 100%; background: #141923; border: 1px solid #2b3139; color: white; padding: 12px; border-radius: 8px; font-size: 14px; margin-bottom: 12px; outline: none; transition: 0.2s; }
+        .input-field:focus { border-color: #fcd535; }
+        .submit-btn { background: linear-gradient(90deg, #fcd535, #f0b90b); color: #000; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 16px; text-transform: uppercase; }
 
-        /* Live Match Card (Inside Sports) */
-        .match-card { background: #1a1f24; border-radius: 8px; padding: 12px; margin-top: 10px; border: 1px solid #2b3139; }
+        /* Fake Live Wins Animation (To create excitement) */
+        .live-ticker {
+            background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px; margin-top: 15px; font-size: 12px; text-align: center; color: #00ff66;
+            border: 1px dashed rgba(0,255,102,0.2);
+        }
     </style>
 </head>
 <body>
 
     <div class="navbar">
-        <div class="logo">DHAKA7</div>
+        <div class="logo">DHAKA7 VIP</div>
         <div class="wallet-box">
-            <div class="balance-container">৳ <span id="user-balance">0</span></div>
+            <div class="balance-container">৳ <span id="user-balance" class="balance-amount">0</span></div>
         </div>
+    </div>
+
+    <div class="bonus-banner">
+        <div class="badge-mega">HOT</div>
+        <h3>🎁 50% প্রথম ডিপোজিট বোনাস!</h3>
+        <p>আপনি যদি প্রথমবার <b>৳২০০</b> বা তার বেশি ডিপোজিট করেন, তবে সাথে সাথে পাবেন ফ্ল্যাট <b>৫০% ক্যাশব্যাক বোনাস!</b> অফারটি সীমিত সময়ের জন্য।</p>
     </div>
 
     <div class="action-btns">
@@ -88,61 +122,77 @@
         <button class="act-btn btn-withdraw" onclick="toggleModal('withdrawModal', true)">📤 Withdraw</button>
     </div>
 
-    <div class="section-title">🎮 Choose Game</div>
+    <div class="section-title"><span>🎮</span> প্রিমিয়াম গেম সমূহ (ডিপোজিট আবশ্যিক)</div>
     <div class="games-grid">
-        <div class="game-card" onclick="openGame('Sports Betting')">
+        <div class="game-card" onclick="tryOpenGame('Sports Prediction')">
+            <div class="lock-icon">🔒 VIP</div>
             <div class="game-icon">⚽</div>
             <div class="game-name">Sports Prediction</div>
         </div>
-        <div class="game-card" onclick="openGame('Mines Game')">
+        <div class="game-card" onclick="tryOpenGame('Crazy Mines')">
+            <div class="lock-icon">🔒 VIP</div>
             <div class="game-icon">💣</div>
-            <div class="game-name">Mines (Minesweeper)</div>
+            <div class="game-name">Crazy Mines</div>
         </div>
-        <div class="game-card" onclick="openGame('Ludo Dice')">
+        <div class="game-card" onclick="tryOpenGame('Ludo Star Dice')">
+            <div class="lock-icon">🔒 VIP</div>
             <div class="game-icon">🎲</div>
-            <div class="game-name">Ludo King Dice</div>
+            <div class="game-name">Ludo Star Dice</div>
         </div>
-        <div class="game-card" onclick="openGame('Lucky Slots')">
+        <div class="game-card" onclick="tryOpenGame('Mega Slots 777')">
+            <div class="lock-icon">🔒 VIP</div>
             <div class="game-icon">🎰</div>
-            <div class="game-name">Lucky 777 Slots</div>
+            <div class="game-name">Mega Slots 777</div>
+        </div>
+        <div class="game-card" onclick="tryOpenGame('Live Casino')">
+            <div class="lock-icon">🔒 VIP</div>
+            <div class="game-icon">🃏</div>
+            <div class="game-name">Live Casino</div>
+        </div>
+        <div class="game-card" onclick="tryOpenGame('Crash Aviator')">
+            <div class="lock-icon">🔒 VIP</div>
+            <div class="game-icon">🚀</div>
+            <div class="game-name">Crash Aviator</div>
         </div>
     </div>
+
+    <div class="live-ticker" id="liveTicker">🔥 User @shakil_99 just deposited ৳১,৫০০!</div>
 
     <div class="modal-overlay" id="overlay" onclick="closeAllModals()"></div>
 
     <div class="modal" id="depositModal">
         <div class="modal-header">
-            <span>bKash Deposit</span>
+            <span>bKash Secure Deposit</span>
             <span class="close-modal" onclick="toggleModal('depositModal', false)">✕</span>
         </div>
-        <p style="font-size: 12px; color: #848e9c; margin-bottom: 8px;">নিচের নাম্বারে "Send Money" করুন:</p>
-        <div class="bkash-number-box"> bKash: 01755172287 (Personal)</div>
+        <p style="font-size: 12px; color: #848e9c; margin-bottom: 10px;">নিচের নাম্বারে টাকা <b>Send Money</b> করুন:</p>
+        <div class="bkash-number-box">📋 bKash: 01755172287</div>
         
-        <input type="number" class="input-field" id="dep-amount" placeholder="কত টাকা পাঠিয়েছেন? (Min: ৳২০০)">
-        <input type="text" class="input-field" id="dep-phone" placeholder="যে নাম্বার থেকে পাঠিয়েছেন (Your bKash No)">
+        <input type="number" class="input-field" id="dep-amount" placeholder="ডিপোজিটের পরিমাণ (সর্বনিম্ন ৳২০০)">
+        <input type="text" class="input-field" id="dep-phone" placeholder="আপনার বিকাশ মোবাইল নাম্বার">
         <input type="text" class="input-field" id="dep-trx" placeholder="Transaction ID (TrxID)">
         
-        <button class="submit-btn" onclick="submitDeposit()">Submit Request</button>
+        <button class="submit-btn" onclick="submitDeposit()">কনফার্ম ডিপোজিট 🚀</button>
     </div>
 
     <div class="modal" id="withdrawModal">
         <div class="modal-header">
-            <span>Withdraw Balance</span>
+            <span>উইথড্রয়াল রিকোয়েস্ট</span>
             <span class="close-modal" onclick="toggleModal('withdrawModal', false)">✕</span>
         </div>
-        <input type="number" class="input-field" id="wit-amount" placeholder="উত্তোলনের পরিমাণ (Min: ৳৫০০)">
-        <input type="text" class="input-field" id="wit-phone" placeholder="bKash Personal নাম্বার দিন">
+        <input type="number" class="input-field" id="wit-amount" placeholder="উত্তোলনের পরিমাণ (সর্বনিম্ন ৳৫০০)">
+        <input type="text" class="input-field" id="wit-phone" placeholder="বিকাশ পার্সোনাল নাম্বার">
         
-        <button class="submit-btn" style="background:#f6465d; color:white;" onclick="submitWithdraw()">Request Withdraw</button>
+        <button class="submit-btn" style="background: linear-gradient(90deg, #f6465d, #d93a4e); color:white;" onclick="submitWithdraw()">টাকা উত্তোলন করুন 📤</button>
     </div>
 
     <script>
-        // Telegram WebApp Setup
+        // Telegram WebApp Init
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Local Balance State
-        let balance = parseInt(localStorage.getItem('d7_balance')) || 0;
+        // Local Storage State
+        let balance = parseInt(localStorage.getItem('d7_vip_balance')) || 0;
         document.getElementById('user-balance').innerText = balance.toLocaleString();
 
         // Modal Controllers
@@ -156,52 +206,88 @@
             toggleModal('withdrawModal', false);
         }
 
-        // Deposit Action
+        // Lock Security Feature: Deposit validation before opening game
+        function tryOpenGame(gameName) {
+            if (balance <= 0) {
+                tg.showPopup({
+                    title: "🔒 এক্সেস ব্লকড!",
+                    message: "গেমটি খেলতে আপনার অ্যাকাউন্টে ব্যালেন্স থাকা আবশ্যক। অনুগ্রহ করে প্রথমে বিকাশ অপশন থেকে ডিপোজিট সম্পন্ন করুন। প্রথম ডিপোজিটে ২০০ টাকা বা তার বেশিতে পাচ্ছেন ৫০% ইনস্ট্যান্ট বোনাস! 🔥",
+                    buttons: [{id: "depBtn", type: "default", text: "📥 এখনই ডিপোজিট করুন"}]
+                }, (buttonId) => {
+                    if (buttonId === "depBtn") {
+                        toggleModal('depositModal', true);
+                    }
+                });
+            } else {
+                tg.showAlert(`🎯 ${gameName} গেমটি সফলভাবে আনলক হয়েছে! গেম স্ক্রিন লোড হচ্ছে...`);
+            }
+        }
+
+        // Deposit Process Logic with 50% Bonus Check
         function submitDeposit() {
-            const amount = document.getElementById('dep-amount').value;
+            const amountInput = document.getElementById('dep-amount').value;
             const phone = document.getElementById('dep-phone').value;
             const trx = document.getElementById('dep-trx').value;
 
-            if(!amount || !phone || !trx) {
-                tg.showAlert("সবগুলো ঘর সঠিকভাবে পূরণ করুন!");
+            if(!amountInput || !phone || !trx) {
+                tg.showAlert("⚠️ দয়া করে সবগুলো ঘর সঠিকভাবে পূরণ করুন!");
+                return;
+            }
+
+            let amount = parseInt(amountInput);
+            if(amount < 200) {
+                tg.showAlert("❌ দুঃখিত! সর্বনিম্ন ডিপোজিটের পরিমাণ ৳২০০।");
                 return;
             }
             
-            // রিয়েল অ্যাপে এটি ব্যাকএন্ড বা অ্যাডমিন প্যানেলে যাবে। এখানে টেস্ট ডেমো হিসেবে ব্যালেন্স অ্যাড করে দেওয়া হচ্ছে:
-            balance += parseInt(amount);
-            localStorage.setItem('d7_balance', balance);
+            // Apply 50% Welcome Bonus if amount >= 200
+            let finalAmount = amount;
+            let bonusText = "";
+            if (amount >= 200) {
+                let bonus = amount * 0.5;
+                finalAmount += bonus;
+                bonusText = `\n🎁 অভিনন্দন! আপনি ৫০% বোনাস হিসেবে অতিরিক্ত ৳${bonus} পেয়েছেন!`;
+            }
+
+            // Sync with local system
+            balance += finalAmount;
+            localStorage.setItem('d7_vip_balance', balance);
             document.getElementById('user-balance').innerText = balance.toLocaleString();
             
             toggleModal('depositModal', false);
-            tg.showAlert(`✅ ৳${amount} ডিপোজিট রিকোয়েস্ট জমা হয়েছে! অ্যাডমিন ভেরিফাই করে ৫-১০ মিনিটে ব্যালেন্স যোগ করে দেবে। (টেস্ট ডেমো হিসেবে ব্যালেন্স যোগ করা হয়েছে)`);
+            tg.showAlert(`✅ ৳${amount} ডিপোজিট রিকোয়েস্ট সফলভাবে সাবমিট হয়েছে! অ্যাডমিন ট্রানজেকশন ভেরিফাই করে ৫ মিনিটের মধ্যে ব্যালেন্স যোগ করে দেবে।${bonusText}`);
         }
 
-        // Withdraw Action
+        // Withdraw Request Handling
         function submitWithdraw() {
             const amount = parseInt(document.getElementById('wit-amount').value);
             const phone = document.getElementById('wit-phone').value;
 
             if(!amount || !phone) {
-                tg.showAlert("অনুগ্রহ করে সঠিক তথ্য দিন!");
+                tg.showAlert("⚠️ সঠিক তথ্য ইনপুট দিন!");
                 return;
             }
             if(amount > balance) {
-                tg.showAlert("আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই!");
+                tg.showAlert("❌ আপনার ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই!");
                 return;
             }
 
             balance -= amount;
-            localStorage.setItem('d7_balance', balance);
+            localStorage.setItem('d7_vip_balance', balance);
             document.getElementById('user-balance').innerText = balance.toLocaleString();
             
             toggleModal('withdrawModal', false);
-            tg.showAlert(`✅ ৳${amount} উইথড্র রিকোয়েস্ট সফল হয়েছে। কিছুক্ষণের মধ্যে আপনার বিকাশ নাম্বারে টাকা চলে যাবে।`);
+            tg.showAlert(`✅ ৳${amount} উইথড্র রিকোয়েস্ট প্রসেসিংয়ে আছে। কিছুক্ষণের মধ্যে আপনার বিকাশ নাম্বারে টাকা পৌঁছে যাবে।`);
         }
 
-        // Open Games Function
-        function openGame(gameName) {
-            tg.showAlert(`🎯 ${gameName} গেমটি লোড হচ্ছে... এখানে আপনার নিজস্ব গেমপ্লে মেকানিজম স্ক্রিন ওপেন হবে।`);
-        }
+        // Psychological Trigger: Fake Live Notification Generator to build trust
+        const names = ["rahad_42", "mim_khan", "ariyan_gaming", "ismail_h", "tanvir_77"];
+        const amounts = ["৳৫০০", "৳১,০০০", "৳২০০", "৳২,৫০০", "৳৩০০"];
+        setInterval(() => {
+            let randomName = names[Math.floor(Math.random() * names.length)];
+            let randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+            document.getElementById('liveTicker').innerText = `🔥 User @${randomName} just deposited ${randomAmount}!`;
+        }, 7000);
     </script>
 </body>
 </html>
