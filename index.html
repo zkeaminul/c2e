@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dhaka7 Sports Platform</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: #0b0e11;
+            color: #eaecef;
+            padding: 15px;
+            padding-bottom: 80px;
+        }
+
+        /* Top Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e2329;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-bottom: 2px solid #fcd535;
+        }
+        .logo { font-size: 20px; font-weight: bold; color: #fcd535; }
+        .balance-container { background: #2b3139; padding: 6px 12px; border-radius: 5px; font-weight: bold; }
+        .balance-amount { color: #fcd535; }
+
+        /* Banner */
+        .promo-banner {
+            background: linear-gradient(135deg, #fcd535 0%, #f0b90b 100%);
+            color: #000;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+        }
+
+        /* Section Title */
+        .section-title { font-size: 16px; margin: 10px 0; color: #848e9c; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Match Card */
+        .match-card {
+            background: #1e2329;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #2b3139;
+        }
+        .match-header { display: flex; justify-content: space-between; font-size: 12px; color: #848e9c; margin-bottom: 10px; }
+        .live-badge { background: #f6465d; color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold; animation: blink 1.5s infinite; }
+        
+        .teams { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: bold; margin-bottom: 15px; }
+        
+        /* Odds Buttons */
+        .odds-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .odds-btn {
+            background: #2b3139;
+            border: 1px solid #474f59;
+            color: #eaecef;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .odds-btn:hover { border-color: #fcd535; }
+        .odds-btn span:first-child { font-size: 12px; color: #848e9c; }
+        .odds-btn span:last-child { font-size: 15px; font-weight: bold; color: #fcd535; margin-top: 4px; }
+
+        /* Bet Slip Popup */
+        .bet-slip {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #1e2329;
+            border-top: 3px solid #fcd535;
+            padding: 15px;
+            border-radius: 15px 15px 0 0;
+            display: none;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .slip-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; }
+        .bet-input-box { display: flex; gap: 10px; margin-bottom: 12px; }
+        .bet-input { flex: 1; background: #2b3139; border: 1px solid #474f59; color: white; padding: 10px; border-radius: 5px; font-size: 16px; }
+        .place-bet-btn { background: #fcd535; color: #000; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; }
+
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">DHAKA7</div>
+        <div class="balance-container">Wallet: ৳ <span id="user-balance">5,000</span></div>
+    </div>
+
+    <div class="promo-banner">
+        🔥 100% Welcome Bonus on First Deposit! Safe & Secure.
+    </div>
+
+    <div class="section-title">⚡ Live Matches</div>
+
+    <div class="match-card">
+        <div class="match-header">
+            <span>T20 World Cup</span>
+            <span class="live-badge">LIVE</span>
+        </div>
+        <div class="teams">
+            <span>Bangladesh 🇧🇩</span>
+            <span>vs</span>
+            <span>India 🇮🇳</span>
+        </div>
+        <div class="odds-container">
+            <button class="odds-btn" onclick="openBetSlip('Bangladesh', 1.85)">
+                <span>Team 1</span>
+                <span>1.85</span>
+            </button>
+            <button class="odds-btn" onclick="openBetSlip('Draw', 4.50)">
+                <span>Draw</span>
+                <span>4.50</span>
+            </button>
+            <button class="odds-btn" onclick="openBetSlip('India', 1.95)">
+                <span>Team 2</span>
+                <span>1.95</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="match-card">
+        <div class="match-header">
+            <span>English Premier League</span>
+            <span>Today, 09:00 PM</span>
+        </div>
+        <div class="teams">
+            <span>Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+            <span>vs</span>
+            <span>Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+        </div>
+        <div class="odds-container">
+            <button class="odds-btn" onclick="openBetSlip('Chelsea', 2.10)">
+                <span>Team 1</span>
+                <span>2.10</span>
+            </button>
+            <button class="odds-btn" onclick="openBetSlip('Draw', 3.20)">
+                <span>Draw</span>
+                <span>3.20</span>
+            </button>
+            <button class="odds-btn" onclick="openBetSlip('Arsenal', 1.75)">
+                <span>Team 2</span>
+                <span>1.75</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="bet-slip" id="betSlip">
+        <div class="slip-header">
+            <span>Bet On: <span id="selected-team" style="color: #fcd535;">-</span></span>
+            <span style="cursor:pointer; color: #f6465d;" onclick="closeSlip()">✕</span>
+        </div>
+        <div style="font-size: 13px; margin-bottom: 10px; color:#848e9c;">Odds: <span id="selected-odds">0.00</span></div>
+        <div class="bet-input-box">
+            <input type="number" class="bet-input" id="bet-amount" placeholder="Enter Amount (৳)" oninput="calculateEstProfit()">
+        </div>
+        <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between;">
+            <span>Est. Return:</span>
+            <span style="color:#00ff66; font-weight:bold;">৳ <span id="est-profit">0.00</span></span>
+        </div>
+        <button class="place-bet-btn" onclick="placeBet()">Place Bet</button>
+    </div>
+
+    <script>
+        // Telegram UI Init
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let currentBalance = 5000;
+        let selectedOdds = 0;
+
+        function openBetSlip(team, odds) {
+            selectedOdds = odds;
+            document.getElementById('selected-team').innerText = team;
+            document.getElementById('selected-odds').innerText = odds;
+            document.getElementById('betSlip').style.display = 'block';
+            calculateEstProfit();
+        }
+
+        function closeSlip() {
+            document.getElementById('betSlip').style.display = 'none';
+        }
+
+        function calculateEstProfit() {
+            const amount = document.getElementById('bet-amount').value;
+            const profit = amount ? (amount * selectedOdds).toFixed(2) : "0.00";
+            document.getElementById('est-profit').innerText = profit;
+        }
+
+        function placeBet() {
+            const amount = parseInt(document.getElementById('bet-amount').value);
+            if (!amount || amount <= 0) {
+                if(tg.showAlert) tg.showAlert("Please enter a valid amount!");
+                return;
+            }
+            if (amount > currentBalance) {
+                if(tg.showAlert) tg.showAlert("Insufficient balance!");
+                return;
+            }
+
+            currentBalance -= amount;
+            document.getElementById('user-balance').innerText = currentBalance.toLocaleString();
+            closeSlip();
+            
+            if(tg.showAlert) {
+                tg.showAlert("✅ Bet Placed Successfully!");
+            } else {
+                alert("✅ Bet Placed Successfully!");
+            }
+        }
+    </script>
+</body>
+</html>
