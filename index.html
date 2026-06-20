@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dhaka7 Sports Platform</title>
+    <title>Dhaka7 Pro Gaming & Betting</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -12,7 +12,7 @@
             background-color: #0b0e11;
             color: #eaecef;
             padding: 15px;
-            padding-bottom: 80px;
+            padding-bottom: 100px;
         }
 
         /* Top Navbar */
@@ -26,201 +26,181 @@
             border-bottom: 2px solid #fcd535;
         }
         .logo { font-size: 20px; font-weight: bold; color: #fcd535; }
+        .wallet-box { display: flex; align-items: center; gap: 10px; }
         .balance-container { background: #2b3139; padding: 6px 12px; border-radius: 5px; font-weight: bold; }
         .balance-amount { color: #fcd535; }
+        
+        /* Deposit & Withdraw Buttons */
+        .action-btns { display: flex; gap: 10px; margin: 15px 0; }
+        .act-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; text-align: center; }
+        .btn-deposit { background: #00ff66; color: #000; }
+        .btn-withdraw { background: #f6465d; color: #fff; }
 
-        /* Banner */
-        .promo-banner {
-            background: linear-gradient(135deg, #fcd535 0%, #f0b90b 100%);
-            color: #000;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            font-weight: bold;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.3);
-        }
-
-        /* Section Title */
-        .section-title { font-size: 16px; margin: 10px 0; color: #848e9c; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Match Card */
-        .match-card {
-            background: #1e2329;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
+        /* Game Categories Grid */
+        .section-title { font-size: 16px; margin: 15px 0 10px 0; color: #848e9c; text-transform: uppercase; letter-spacing: 1px; }
+        .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .game-card {
+            background: linear-gradient(145deg, #1e2329, #14181c);
             border: 1px solid #2b3139;
-        }
-        .match-header { display: flex; justify-content: space-between; font-size: 12px; color: #848e9c; margin-bottom: 10px; }
-        .live-badge { background: #f6465d; color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold; animation: blink 1.5s infinite; }
-        
-        .teams { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: bold; margin-bottom: 15px; }
-        
-        /* Odds Buttons */
-        .odds-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .odds-btn {
-            background: #2b3139;
-            border: 1px solid #474f59;
-            color: #eaecef;
-            padding: 10px;
-            border-radius: 5px;
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.2s;
+            transition: transform 0.2s;
         }
-        .odds-btn:hover { border-color: #fcd535; }
-        .odds-btn span:first-child { font-size: 12px; color: #848e9c; }
-        .odds-btn span:last-child { font-size: 15px; font-weight: bold; color: #fcd535; margin-top: 4px; }
+        .game-card:active { transform: scale(0.95); }
+        .game-icon { font-size: 32px; margin-bottom: 8px; }
+        .game-name { font-weight: bold; font-size: 15px; }
 
-        /* Bet Slip Popup */
-        .bet-slip {
+        /* Popups / Modals */
+        .modal {
             position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: #1e2329;
-            border-top: 3px solid #fcd535;
-            padding: 15px;
-            border-radius: 15px 15px 0 0;
-            display: none;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
-            z-index: 1000;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 360px;
+            background: #1e2329; border: 2px solid #fcd535;
+            border-radius: 15px; padding: 20px;
+            display: none; z-index: 2000;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
         }
-        .slip-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; }
-        .bet-input-box { display: flex; gap: 10px; margin-bottom: 12px; }
-        .bet-input { flex: 1; background: #2b3139; border: 1px solid #474f59; color: white; padding: 10px; border-radius: 5px; font-size: 16px; }
-        .place-bet-btn { background: #fcd535; color: #000; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:none; z-index: 1999; }
+        .modal-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-bottom: 15px; color: #fcd535; }
+        .close-modal { cursor: pointer; color: #f6465d; }
+        
+        .bkash-number-box { background: #e2136e; color: white; padding: 12px; border-radius: 8px; font-weight: bold; text-align: center; margin-bottom: 15px; font-size: 16px; }
+        .input-field { width: 100%; background: #2b3139; border: 1px solid #474f59; color: white; padding: 10px; border-radius: 5px; font-size: 14px; margin-bottom: 12px; }
+        .submit-btn { background: #fcd535; color: #000; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 15px; }
 
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        /* Live Match Card (Inside Sports) */
+        .match-card { background: #1a1f24; border-radius: 8px; padding: 12px; margin-top: 10px; border: 1px solid #2b3139; }
     </style>
 </head>
 <body>
 
     <div class="navbar">
         <div class="logo">DHAKA7</div>
-        <div class="balance-container">Wallet: ৳ <span id="user-balance">5,000</span></div>
-    </div>
-
-    <div class="promo-banner">
-        🔥 100% Welcome Bonus on First Deposit! Safe & Secure.
-    </div>
-
-    <div class="section-title">⚡ Live Matches</div>
-
-    <div class="match-card">
-        <div class="match-header">
-            <span>T20 World Cup</span>
-            <span class="live-badge">LIVE</span>
-        </div>
-        <div class="teams">
-            <span>Bangladesh 🇧🇩</span>
-            <span>vs</span>
-            <span>India 🇮🇳</span>
-        </div>
-        <div class="odds-container">
-            <button class="odds-btn" onclick="openBetSlip('Bangladesh', 1.85)">
-                <span>Team 1</span>
-                <span>1.85</span>
-            </button>
-            <button class="odds-btn" onclick="openBetSlip('Draw', 4.50)">
-                <span>Draw</span>
-                <span>4.50</span>
-            </button>
-            <button class="odds-btn" onclick="openBetSlip('India', 1.95)">
-                <span>Team 2</span>
-                <span>1.95</span>
-            </button>
+        <div class="wallet-box">
+            <div class="balance-container">৳ <span id="user-balance">0</span></div>
         </div>
     </div>
 
-    <div class="match-card">
-        <div class="match-header">
-            <span>English Premier League</span>
-            <span>Today, 09:00 PM</span>
+    <div class="action-btns">
+        <button class="act-btn btn-deposit" onclick="toggleModal('depositModal', true)">📥 Deposit (bKash)</button>
+        <button class="act-btn btn-withdraw" onclick="toggleModal('withdrawModal', true)">📤 Withdraw</button>
+    </div>
+
+    <div class="section-title">🎮 Choose Game</div>
+    <div class="games-grid">
+        <div class="game-card" onclick="openGame('Sports Betting')">
+            <div class="game-icon">⚽</div>
+            <div class="game-name">Sports Prediction</div>
         </div>
-        <div class="teams">
-            <span>Chelsea 🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
-            <span>vs</span>
-            <span>Arsenal 🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+        <div class="game-card" onclick="openGame('Mines Game')">
+            <div class="game-icon">💣</div>
+            <div class="game-name">Mines (Minesweeper)</div>
         </div>
-        <div class="odds-container">
-            <button class="odds-btn" onclick="openBetSlip('Chelsea', 2.10)">
-                <span>Team 1</span>
-                <span>2.10</span>
-            </button>
-            <button class="odds-btn" onclick="openBetSlip('Draw', 3.20)">
-                <span>Draw</span>
-                <span>3.20</span>
-            </button>
-            <button class="odds-btn" onclick="openBetSlip('Arsenal', 1.75)">
-                <span>Team 2</span>
-                <span>1.75</span>
-            </button>
+        <div class="game-card" onclick="openGame('Ludo Dice')">
+            <div class="game-icon">🎲</div>
+            <div class="game-name">Ludo King Dice</div>
+        </div>
+        <div class="game-card" onclick="openGame('Lucky Slots')">
+            <div class="game-icon">🎰</div>
+            <div class="game-name">Lucky 777 Slots</div>
         </div>
     </div>
 
-    <div class="bet-slip" id="betSlip">
-        <div class="slip-header">
-            <span>Bet On: <span id="selected-team" style="color: #fcd535;">-</span></span>
-            <span style="cursor:pointer; color: #f6465d;" onclick="closeSlip()">✕</span>
+    <div class="modal-overlay" id="overlay" onclick="closeAllModals()"></div>
+
+    <div class="modal" id="depositModal">
+        <div class="modal-header">
+            <span>bKash Deposit</span>
+            <span class="close-modal" onclick="toggleModal('depositModal', false)">✕</span>
         </div>
-        <div style="font-size: 13px; margin-bottom: 10px; color:#848e9c;">Odds: <span id="selected-odds">0.00</span></div>
-        <div class="bet-input-box">
-            <input type="number" class="bet-input" id="bet-amount" placeholder="Enter Amount (৳)" oninput="calculateEstProfit()">
+        <p style="font-size: 12px; color: #848e9c; margin-bottom: 8px;">নিচের নাম্বারে "Send Money" করুন:</p>
+        <div class="bkash-number-box"> bKash: 017XXXXXXXX (Personal)</div>
+        
+        <input type="number" class="input-field" id="dep-amount" placeholder="কত টাকা পাঠিয়েছেন? (Min: ৳২০০)">
+        <input type="text" class="input-field" id="dep-phone" placeholder="যে নাম্বার থেকে পাঠিয়েছেন (Your bKash No)">
+        <input type="text" class="input-field" id="dep-trx" placeholder="Transaction ID (TrxID)">
+        
+        <button class="submit-btn" onclick="submitDeposit()">Submit Request</button>
+    </div>
+
+    <div class="modal" id="withdrawModal">
+        <div class="modal-header">
+            <span>Withdraw Balance</span>
+            <span class="close-modal" onclick="toggleModal('withdrawModal', false)">✕</span>
         </div>
-        <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between;">
-            <span>Est. Return:</span>
-            <span style="color:#00ff66; font-weight:bold;">৳ <span id="est-profit">0.00</span></span>
-        </div>
-        <button class="place-bet-btn" onclick="placeBet()">Place Bet</button>
+        <input type="number" class="input-field" id="wit-amount" placeholder="উত্তোলনের পরিমাণ (Min: ৳৫০০)">
+        <input type="text" class="input-field" id="wit-phone" placeholder="bKash Personal নাম্বার দিন">
+        
+        <button class="submit-btn" style="background:#f6465d; color:white;" onclick="submitWithdraw()">Request Withdraw</button>
     </div>
 
     <script>
-        // Telegram UI Init
+        // Telegram WebApp Setup
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let currentBalance = 5000;
-        let selectedOdds = 0;
+        // Local Balance State
+        let balance = parseInt(localStorage.getItem('d7_balance')) || 0;
+        document.getElementById('user-balance').innerText = balance.toLocaleString();
 
-        function openBetSlip(team, odds) {
-            selectedOdds = odds;
-            document.getElementById('selected-team').innerText = team;
-            document.getElementById('selected-odds').innerText = odds;
-            document.getElementById('betSlip').style.display = 'block';
-            calculateEstProfit();
+        // Modal Controllers
+        function toggleModal(id, show) {
+            document.getElementById(id).style.display = show ? 'block' : 'none';
+            document.getElementById('overlay').style.display = show ? 'block' : 'none';
         }
 
-        function closeSlip() {
-            document.getElementById('betSlip').style.display = 'none';
+        function closeAllModals() {
+            toggleModal('depositModal', false);
+            toggleModal('withdrawModal', false);
         }
 
-        function calculateEstProfit() {
-            const amount = document.getElementById('bet-amount').value;
-            const profit = amount ? (amount * selectedOdds).toFixed(2) : "0.00";
-            document.getElementById('est-profit').innerText = profit;
-        }
+        // Deposit Action
+        function submitDeposit() {
+            const amount = document.getElementById('dep-amount').value;
+            const phone = document.getElementById('dep-phone').value;
+            const trx = document.getElementById('dep-trx').value;
 
-        function placeBet() {
-            const amount = parseInt(document.getElementById('bet-amount').value);
-            if (!amount || amount <= 0) {
-                if(tg.showAlert) tg.showAlert("Please enter a valid amount!");
+            if(!amount || !phone || !trx) {
+                tg.showAlert("সবগুলো ঘর সঠিকভাবে পূরণ করুন!");
                 return;
             }
-            if (amount > currentBalance) {
-                if(tg.showAlert) tg.showAlert("Insufficient balance!");
-                return;
-            }
-
-            currentBalance -= amount;
-            document.getElementById('user-balance').innerText = currentBalance.toLocaleString();
-            closeSlip();
             
-            if(tg.showAlert) {
-                tg.showAlert("✅ Bet Placed Successfully!");
-            } else {
-                alert("✅ Bet Placed Successfully!");
+            // রিয়েল অ্যাপে এটি ব্যাকএন্ড বা অ্যাডমিন প্যানেলে যাবে। এখানে টেস্ট ডেমো হিসেবে ব্যালেন্স অ্যাড করে দেওয়া হচ্ছে:
+            balance += parseInt(amount);
+            localStorage.setItem('d7_balance', balance);
+            document.getElementById('user-balance').innerText = balance.toLocaleString();
+            
+            toggleModal('depositModal', false);
+            tg.showAlert(`✅ ৳${amount} ডিপোজিট রিকোয়েস্ট জমা হয়েছে! অ্যাডমিন ভেরিফাই করে ৫-১০ মিনিটে ব্যালেন্স যোগ করে দেবে। (টেস্ট ডেমো হিসেবে ব্যালেন্স যোগ করা হয়েছে)`);
+        }
+
+        // Withdraw Action
+        function submitWithdraw() {
+            const amount = parseInt(document.getElementById('wit-amount').value);
+            const phone = document.getElementById('wit-phone').value;
+
+            if(!amount || !phone) {
+                tg.showAlert("অনুগ্রহ করে সঠিক তথ্য দিন!");
+                return;
             }
+            if(amount > balance) {
+                tg.showAlert("আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই!");
+                return;
+            }
+
+            balance -= amount;
+            localStorage.setItem('d7_balance', balance);
+            document.getElementById('user-balance').innerText = balance.toLocaleString();
+            
+            toggleModal('withdrawModal', false);
+            tg.showAlert(`✅ ৳${amount} উইথড্র রিকোয়েস্ট সফল হয়েছে। কিছুক্ষণের মধ্যে আপনার বিকাশ নাম্বারে টাকা চলে যাবে।`);
+        }
+
+        // Open Games Function
+        function openGame(gameName) {
+            tg.showAlert(`🎯 ${gameName} গেমটি লোড হচ্ছে... এখানে আপনার নিজস্ব গেমপ্লে মেকানিজম স্ক্রিন ওপেন হবে।`);
         }
     </script>
 </body>
